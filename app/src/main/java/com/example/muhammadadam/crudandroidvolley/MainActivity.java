@@ -1,11 +1,13 @@
 package com.example.muhammadadam.crudandroidvolley;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.android.volley.Request;
@@ -49,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mManager);
         mAdapter = new AdapterData(MainActivity.this,mItems);
         mRecyclerView.setAdapter(mAdapter);
+
+        btnInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, InsertData.class);
+                startActivity(intent);
+            }
+        });
     }
     private void loadJson(){
         pd.setMessage("Mengambil Data");
