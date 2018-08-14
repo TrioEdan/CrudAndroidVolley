@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CrudAndroidVolley</string>
+    <string name="this_for_name">this for name</string>
+    <string name="this_for_npm">this for npm</string>
+</resources>
