@@ -32,6 +32,13 @@ public class InsertData extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_data);
 
+        Intent data = getIntent();
+        final int update = data.getIntExtra("update",0);
+        String intent_npm = data.getStringExtra("npm");
+        String intent_nama = data.getStringExtra("nama");
+        String intent_prodi = data.getStringExtra("prodi");
+        String intent_kelas = data.getStringExtra("kelas");
+
         npm = (EditText) findViewById(R.id.inp_npm);
         nama = (EditText) findViewById(R.id.inp_nama);
         prodi = (EditText) findViewById(R.id.inp_prodi);
@@ -40,10 +47,22 @@ public class InsertData extends AppCompatActivity {
         btnInput = (Button) findViewById(R.id.btn_simpan);
         pd = new ProgressDialog(InsertData.this);
 
+        if (update == 1){
+            btnInput.setText("Update Data");
+            npm.setText(intent_npm);
+            npm.setVisibility(View.GONE);
+            nama.setText(intent_nama);
+            prodi.setText(intent_prodi);
+            kelas.setText(intent_kelas);
+        }
         btnInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpanData();
+                if (update == 1){
+                    updateData();
+                }else {
+                    simpanData();
+                }
             }
         });
 
@@ -57,6 +76,45 @@ public class InsertData extends AppCompatActivity {
 
     }
 
+    private void updateData(){
+        pd.setMessage("Update Data");
+        pd.setCancelable(false);
+        pd.show();
+
+        StringRequest upData = new StringRequest(Request.Method.POST, ServerAPI.URL_UPDATE,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pd.cancel();
+                        try {
+                            JSONObject res = new JSONObject(response);
+                            Toast.makeText(InsertData.this, "pesan :"+ res.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        startActivity( new Intent(InsertData.this,MainActivity.class));
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        pd.cancel();
+                        Toast.makeText(InsertData.this, "pesan : Gagal Update Data", Toast.LENGTH_SHORT).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("npm",npm.getText().toString());
+                map.put("nama",nama.getText().toString());
+                map.put("prodi",prodi.getText().toString());
+                map.put("kelas",kelas.getText().toString());
+
+                return map;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(upData);
+    }
     private void simpanData(){
         pd.setMessage("Menyimpan Data");
         pd.setCancelable(false);

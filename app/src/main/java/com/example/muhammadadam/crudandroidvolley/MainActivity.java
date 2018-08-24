@@ -59,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent hapus = new Intent(MainActivity.this, Delete.class);
+                startActivity(hapus);
+            }
+        });
     }
     private void loadJson(){
         pd.setMessage("Mengambil Data");
